@@ -18,7 +18,7 @@ function App() {
       <Route path="/" element={<Navigation/>}> {/**Top level component that will always be present */}
         <Route index element={<Home/>} />
         <Route path="/shop" element={<Shop/>} />
-        <Route path="/signIn" element={<SignIn/>} />
+        <Route path="/sign-in" element={<SignIn/>} />
       </Route>
     </Routes>   
   )

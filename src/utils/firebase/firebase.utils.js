@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithPopup,  GoogleAuthProvider } from 'firebase/auth'
+import { getAuth, signInWithPopup,  GoogleAuthProvider, signInWithRedirect, createUserWithEmailAndPassword } from 'firebase/auth'
 import {
   getFirestore,
   doc, //get document instance
@@ -26,25 +26,28 @@ const firebaseApp = initializeApp(firebaseConfig);
 //initialize provider
 // a class from firebase authentication which is connected to Google auth (this is the firebase implemetation, google has others)
 // reason why its a class using the new keyword is cause one might want to set up multiple provider instances and used them for different things
-const provider = new GoogleAuthProvider()
+const googleProvider = new GoogleAuthProvider()
 
 //set custom params
 // set specific behaviour for the google auth provider
-provider.setCustomParameters({
+ .setCustomParameters({
     prompt: "select_account" //when a client interacts with the provider (ie tries to login) a propmt to select an account should appear
 })
 
 // rules and dnamics of authentication are always the same through out,no need for multiple instances
 //dont need more than one authentication. might need multiple providers
+//getAuth() keeps track of the authentication state of the entire application 
 export const auth = getAuth()
-export const signInWithGooglePopup = () => signInWithPopup(auth, provider)
+export const signInWithGooglePopup = () => signInWithPopup(auth, googleProvider)
+export const signInWithGoogleRedirect = () => signInWithRedirect(auth, googleProvider)
 
 
 //set db instance
 export const db = getFirestore()
 
 //function to  store auth data into firestore db
-export const createUserDocumentFromAuth = async (userAuth) => {
+export const createUserDocumentFromAuth = async (userAuth, additionalInfo= {}) => {
+  if(!userAuth) return
     //see if there is an existing document reference. creates reference (ie users/ioepdHDHea) but not stored in db
   const userDocRef = doc(db, 'users', userAuth.uid)
   console.log(userDocRef)
@@ -62,7 +65,8 @@ export const createUserDocumentFromAuth = async (userAuth) => {
       await setDoc(userDocRef, {
         displayName,
         email,
-        createdAt
+        createdAt,
+        ...additionalInfo
       })
     } catch (error) {
       console.log('error creating user ' ,error.message)
@@ -71,6 +75,12 @@ export const createUserDocumentFromAuth = async (userAuth) => {
   //if user exists
   return userDocRef
 
+}
+
+export const createAuthUserWithEmailAndPassword = async (email,password) => {
+  if (!email || !password) return
+
+  return await createUserWithEmailAndPassword(auth, email, password)
 }
 
 

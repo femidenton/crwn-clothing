@@ -1,5 +1,14 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithPopup,  GoogleAuthProvider, signInWithRedirect, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
+import {
+  getAuth,
+  signInWithPopup,
+  GoogleAuthProvider,
+  signInWithRedirect,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from 'firebase/auth'
 import {
   getFirestore,
   doc, //get document instance
@@ -38,6 +47,7 @@ const googleProvider = new GoogleAuthProvider()
 //dont need more than one authentication. might need multiple providers
 //getAuth() keeps track of the authentication state of the entire application 
 export const auth = getAuth()
+
 export const signInWithGooglePopup = () => signInWithPopup(auth, googleProvider)
 export const signInWithGoogleRedirect = () => signInWithRedirect(auth, googleProvider)
 
@@ -89,3 +99,15 @@ export const signInAuthUserWithEmailAndPassword = async (email, password) => {
 
   return await signInWithEmailAndPassword(auth, email, password)
 }
+
+
+export const signOutUser = async () => {
+  return await signOut(auth)
+}
+
+export const onAuthStateChangedListener = (callback) => {
+  //triggers callback when the authentcation state of the app changes ie when a user signs in or out
+  //its an open listener meaning that its always open to see if there is any change to the auth state (u have to tell it to stop listening)
+  //once the change occurs, it runs the callback
+  return onAuthStateChanged(auth, callback)
+} 

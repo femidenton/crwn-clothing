@@ -1,9 +1,9 @@
 import { useState } from "react"
-import { signInAuthUserWithEmailAndPassword, signInWithGooglePopup, createUserDocumentFromAuth } from "../../utils/firebase/firebase.utils"
+import { signInAuthUserWithEmailAndPassword, signInWithGooglePopup } from "../../utils/firebase/firebase.utils"
 import FormInput from "../form-input/form-input.component"
 import './sign-in-form.styles.scss';
 import Button from "../button/button.component";
-
+// import { UserContext } from "../../context/user.context";
 
 const defaultFormFields = {
 
@@ -13,14 +13,15 @@ const defaultFormFields = {
 
 const SignInForm = () => {
     const [formFields, setFormFields] = useState(defaultFormFields)
-    const {email, password} = formFields
+    const { email, password } = formFields
+    // const {setCurrentUser} = useContext(UserContext)
     
     console.log(formFields)
 
      const logGoogleUser = async () => {
-        const {user} = await signInWithGooglePopup()
-       // eslint-disable-next-line no-unused-vars
-       const userDocRef = await createUserDocumentFromAuth(user)
+         await signInWithGooglePopup()
+        //  setCurrentUser(user)  
+      
     }
 
     const resetFormFields = () => {
@@ -31,10 +32,12 @@ const SignInForm = () => {
         e.preventDefault()
         //confirm passwords  matches
     
-        try {
+        try { 
             // see if authenticated with email and password
-             const response = await signInAuthUserWithEmailAndPassword(email, password)
-            console.log(response)
+            //  const {user} = await signInAuthUserWithEmailAndPassword(email, password)
+            await signInAuthUserWithEmailAndPassword(email, password)
+            
+            // setCurrentUser(user)
 
             resetFormFields()
             
@@ -51,9 +54,7 @@ const SignInForm = () => {
                     console.log('user sign in encountered error', error)
                     break;
             }
-        }
-    
-        
+        }        
     }
 
     const handleChange = (e) => {

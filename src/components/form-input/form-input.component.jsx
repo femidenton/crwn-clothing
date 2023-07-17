@@ -1,22 +1,20 @@
-import './form-input.styles.scss';
+import {FormInputLabel, Input, Group} from './form-input.styles.jsx';
 
 // eslint-disable-next-line react/prop-types
 //const FormInput = ({ label, inputOptions })
 // eslint-disable-next-line react/prop-types
 const FormInput = ({ label, ...otherProps }) => {
   return (
-    <div className='group'>
-      <input className='form-input' {...otherProps} />
+    <Group >
+      <Input {...otherProps} />
       {label && (
-        <label
-          className={`${
-            otherProps.value.length ? 'shrink' : ''
-          } form-input-label`}
+        <FormInputLabel 
+          shrink={otherProps.value.length} //returns a boolean. if the length is 0 its falsy 
         >
           {label}
-        </label>
+        </FormInputLabel>
       )}
-    </div>
+    </Group>
   );
 };
 

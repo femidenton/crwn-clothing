@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useContext } from "react"
 import { ReactComponent as ShoppingIcon } from "../../assets/shopping-bag.svg"
-import "./cart-icon.styles.scss"
+import { CartIconContainer, ItemCount } from './cart-icon.styles';
 import { CartDropdownContext } from "../../context/cart-dropdown.context"
 
 
@@ -13,10 +13,10 @@ const CartIcon = ( ) => {
     }
     console.log(cartCount)
     return (
-        <div onClick={toggleDropdown} className="cart-icon-container">
-            <ShoppingIcon className="shopping-icon" />
-            <span className="item-count"> {cartCount} </span>
-        </div>
+        <CartIconContainer onClick={toggleDropdown}>
+            <ShoppingIcon className='shopping-icon' />
+            <ItemCount>{cartCount}</ItemCount>
+        </CartIconContainer>
     )
 }
 
